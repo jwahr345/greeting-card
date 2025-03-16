@@ -23,10 +23,16 @@
 
             context.font = '30px Arial';
             context.fillStyle = 'black';
-            context.fillText(name, 50, 50); // يمكنك تعديل هذه القيم لتغيير موقع الاسم وحجمه
+            context.fillText(name, 50, 50);
 
             const dataURL = canvas.toDataURL();
-            image.src = dataURL;
+
+            // إنشاء عنصر img جديد واستبدال القديم
+            const newImage = document.createElement('img');
+            newImage.src = dataURL;
+            newImage.alt = 'صورة التهنئة مع الاسم';
+
+            image.parentNode.replaceChild(newImage, image);
         }
     </script>
 </body>
