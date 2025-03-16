@@ -1,103 +1,55 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بطاقة تهنئة بالاسم</title>
+    <title>دعوة خاصة</title>
     <style>
         body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            padding: 20px;
         }
-        .container {
-            position: relative;
-            display: inline-block;
+        #invitation-image {
+            max-width: 80%; /* تعديل الحجم حسب الحاجة */
+            height: auto;
+        }
+        #name-input {
             margin-top: 20px;
-        }
-        #greetingImage {
-            width: 100%;
-            max-width: 400px;
-            border-radius: 10px;
-        }
-        #nameText {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 2px 2px 8px black;
-        }
-        input, button {
-            margin-top: 10px;
-            padding: 10px;
-            font-size: 16px;
         }
     </style>
 </head>
 <body>
-
-    <h2>🎉 أنشئ بطاقة تهنئة باسمك 🎉</h2>
-
-    <input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
-    <button onclick="generateGreeting()">إضافة الاسم</button>
-    <button onclick="downloadImage()">تحميل الصورة</button>
-
-    <div class="container">
-        <img id="greetingImage" src="greeting.png" alt="بطاقة تهنئة">
-        <span id="nameText"></span>
+    <h1>دعوة خاصة</h1>
+    <div id="invitation-container">
+        <img id="invitation-image" src="images/greeting.png" alt="دعوة خاصة">
+    </div>
+    <div id="name-input">
+        <input type="text" id="name" placeholder="أدخل اسمك">
+        <button onclick="addNameToImage()">تأكيد الحضور</button>
     </div>
 
-    <canvas id="canvas" style="display: none;"></canvas>
-
     <script>
-        function generateGreeting() {
-            let name = document.getElementById("nameInput").value;
-            let nameText = document.getElementById("nameText");
+        function addNameToImage() {
+            var name = document.getElementById('name').value;
+            var invitationImage = document.getElementById('invitation-image');
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            var image = new Image();
+            image.src = 'images/greeting.png'; // تعديل اسم الصورة هنا
 
-            if (name.trim() === "") {
-                alert("يرجى إدخال الاسم!");
-                return;
-            }
-
-            nameText.innerText = name;
-        }
-
-        function downloadImage() {
-            let canvas = document.getElementById("canvas");
-            let ctx = canvas.getContext("2d");
-            let img = document.getElementById("greetingImage");
-            let name = document.getElementById("nameText").innerText;
-
-            if (name === "") {
-                alert("يرجى إدخال الاسم أولاً!");
-                return;
-            }
-
-            // ضبط حجم الـ canvas بنفس حجم الصورة
-            canvas.width = img.width;
-            canvas.height = img.height;
-
-            // رسم الصورة على الـ canvas
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-
-            // إعداد النص على الصورة
-            ctx.font = "24px Arial";
-            ctx.fillStyle = "white";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(name, img.width / 2, img.height / 2);
-
-            // إنشاء رابط تحميل الصورة
-            let link = document.createElement("a");
-            link.download = "بطاقة_تهنئة.png";
-            link.href = canvas.toDataURL();
-            link.click();
+            image.onload = function() {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                ctx.drawImage(image, 0, 0);
+                ctx.font = '30px Arial'; // تعديل الخط والحجم حسب الحاجة
+                ctx.fillStyle = 'black'; // تعديل لون النص حسب الحاجة
+                ctx.fillText(name, 200, 150); // تعديل موقع النص حسب الحاجة
+                invitationImage.src = canvas.toDataURL();
+            };
         }
     </script>
-
 </body>
 </html>
