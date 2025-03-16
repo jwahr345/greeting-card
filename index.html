@@ -1,39 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-    <title>تهنئة بالاسم</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بطاقة تهنئة بالاسم</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            position: relative;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        #greetingImage {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+        #nameText {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 8px black;
+        }
+        input, button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <img id="greeting-image" src="greeting.png" alt="صورة التهنئة">
-    <br>
-    <input type="text" id="name-input" placeholder="أدخل اسمك">
-    <button onclick="addNameToImage()">أضف الاسم</button>
+
+    <h2>🎉 أنشئ بطاقة تهنئة باسمك 🎉</h2>
+
+    <input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
+    <button onclick="generateGreeting()">إضافة الاسم</button>
+    <button onclick="downloadImage()">تحميل الصورة</button>
+
+    <div class="container">
+        <img id="greetingImage" src="greeting.png" alt="بطاقة تهنئة">
+        <span id="nameText"></span>
+    </div>
+
     <canvas id="canvas" style="display: none;"></canvas>
 
     <script>
-        function addNameToImage() {
-            const name = document.getElementById('name-input').value;
-            const image = document.getElementById('greeting-image');
-            const canvas = document.getElementById('canvas');
-            const context = canvas.getContext('2d');
+        function generateGreeting() {
+            let name = document.getElementById("nameInput").value;
+            let nameText = document.getElementById("nameText");
 
-            canvas.width = image.width;
-            canvas.height = image.height;
-            context.drawImage(image, 0, 0);
+            if (name.trim() === "") {
+                alert("يرجى إدخال الاسم!");
+                return;
+            }
 
-            context.font = '30px Arial';
-            context.fillStyle = 'black';
-            context.fillText(name, 50, 50);
+            nameText.innerText = name;
+        }
 
-            const dataURL = canvas.toDataURL();
+        function downloadImage() {
+            let canvas = document.getElementById("canvas");
+            let ctx = canvas.getContext("2d");
+            let img = document.getElementById("greetingImage");
+            let name = document.getElementById("nameText").innerText;
 
-            // إنشاء عنصر img جديد واستبدال القديم
-            const newImage = document.createElement('img');
-            newImage.src = dataURL;
-            newImage.alt = 'صورة التهنئة مع الاسم';
+            if (name === "") {
+                alert("يرجى إدخال الاسم أولاً!");
+                return;
+            }
 
-            image.parentNode.replaceChild(newImage, image);
+            // ضبط حجم الـ canvas بنفس حجم الصورة
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // رسم الصورة على الـ canvas
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            // إعداد النص على الصورة
+            ctx.font = "24px Arial";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(name, img.width / 2, img.height / 2);
+
+            // إنشاء رابط تحميل الصورة
+            let link = document.createElement("a");
+            link.download = "بطاقة_تهنئة.png";
+            link.href = canvas.toDataURL();
+            link.click();
         }
     </script>
+
 </body>
 </html>
